@@ -38,7 +38,35 @@ app.bg = {
 };
 
 app.common = {
-  init: function() {}
+  init: function() {
+    var swapTransparentClasses;
+    swapTransparentClasses = function(row) {
+      var nonTransparentTags, tags, transparentTags;
+      tags = row.querySelectorAll('.section__tag');
+      transparentTags = [];
+      nonTransparentTags = [];
+      tags.forEach(function(tag) {
+        if (tag.classList.contains('section__tag--transparent')) {
+          return transparentTags.push(tag);
+        } else {
+          return nonTransparentTags.push(tag);
+        }
+      });
+      transparentTags.forEach(function(tag) {
+        return tag.classList.remove('section__tag--transparent');
+      });
+      return nonTransparentTags.forEach(function(tag) {
+        return tag.classList.add('section__tag--transparent');
+      });
+    };
+    return setInterval(function() {
+      var rows;
+      rows = document.querySelectorAll('.section__tags__row');
+      return rows.forEach(function(row) {
+        return swapTransparentClasses(row);
+      });
+    }, 5000);
+  }
 };
 
 app.header = {
