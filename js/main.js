@@ -528,6 +528,50 @@ app.swiper = {
   }
 };
 
+app.tabs = {
+  init: function() {
+    return $(".tabs").each(function() {
+      var currentIndex, interval, startAutoSlide, stopAutoSlide, tab;
+      tab = $(this);
+      currentIndex = 0;
+      interval = null;
+      if (!tab.find(".tab--current").length) {
+        app.tabs.open(tab, 0);
+      }
+      startAutoSlide = function() {
+        return interval = setInterval(function() {
+          var nextIndex;
+          nextIndex = (currentIndex + 1) % tab.find(".tabs__header .tab").length;
+          app.tabs.open(tab, nextIndex);
+          return currentIndex = nextIndex;
+        }, 6000);
+      };
+      stopAutoSlide = function() {
+        return clearInterval(interval);
+      };
+      startAutoSlide();
+      return tab.find(".tabs__header .tab").click(function(e) {
+        var index;
+        e.preventDefault();
+        index = $(this).index();
+        stopAutoSlide();
+        app.tabs.open(tab, index);
+        currentIndex = index;
+        return startAutoSlide();
+      });
+    });
+  },
+  open: function(tab, index) {
+    tab.find(".tabs__header .tab").removeClass("tab--current");
+    tab.find(".tabs__header .tab").eq(index).addClass("tab--current");
+    tab.find(".tabs__body .tab").removeClass("tab--current");
+    tab.find(".tabs__body .tab").eq(index).addClass("tab--current");
+    if (app.scroll) {
+      return app.scroll.dscroll();
+    }
+  }
+};
+
 $(document).ready(function() {
   var component, properties;
   for (component in app) {
